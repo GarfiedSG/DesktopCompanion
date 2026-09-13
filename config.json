@@ -1,0 +1,16 @@
+{
+  "pet_name": "晴兒",
+  "image_path": "文檔/晴兒.png",
+  "x": 1675,
+  "y": 754,
+  "scale": 0.75,
+  "opacity": 1.0,
+  "always_on_top": true,
+  "locked": false,
+  "idle_switch": {
+    "min_interval": 30,
+    "max_interval": 180,
+    "avoid_repeat": true,
+    "idle_standing_boost": 3
+  }
+}

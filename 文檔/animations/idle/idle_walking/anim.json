@@ -1,0 +1,8 @@
+{
+  "name": "走動",
+  "enabled": false,
+  "weight":1,
+  "move": true,
+  "move_speed": 4,
+  "move_range": 200
+}

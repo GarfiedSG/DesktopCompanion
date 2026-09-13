@@ -1,0 +1,8 @@
+{
+  "name": "站立呼吸",
+  "enabled": true,
+  "weight": 1,
+  "move": false,
+  "move_speed": 4,
+  "move_range": 200
+}
