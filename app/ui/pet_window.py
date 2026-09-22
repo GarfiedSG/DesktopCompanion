@@ -123,6 +123,10 @@ class PetWindow(QWidget):
             image_path = BASE_DIR / "文檔" / "晴兒.png"
             self.state_machine.load_frames("Idle", [image_path])
         
+        # 重置動畫索引
+        self.state_machine.current_index = 0
+        self.state_machine.frame_count = 0
+        
         # 更新當前動畫路徑
         self._current_idle_path = anim["path"]
         self.idle_scheduler.set_current_anim(anim["path"])
@@ -156,6 +160,13 @@ class PetWindow(QWidget):
         
         # 強制切換時，確保狀態機處於 Idle 狀態並顯示第一幀
         if force:
+            self.state_machine.set_state("Idle")
+            self.state_machine.current_index = 0
+            idle_frames = self.state_machine.frames.get("Idle", [])
+            if idle_frames:
+                self._set_pixmap(idle_frames[0])
+        else:
+            # 正常切換也立即顯示第一幀
             self.state_machine.set_state("Idle")
             self.state_machine.current_index = 0
             idle_frames = self.state_machine.frames.get("Idle", [])
@@ -296,7 +307,8 @@ class PetWindow(QWidget):
                 if (cur - self._press_pos).manhattanLength() > 5:
                     self._dragging = True
                     self.state_machine.set_state("Drag")
-                    self.idle_scheduler.pause()
+                    if hasattr(self, "idle_scheduler"):
+                        self.idle_scheduler.pause()
                     # 拖拽時更新移動原點為當前位置
                     self._idle_move_origin = QPoint(self.x(), self.y())
                     # 捕捉滑鼠，確保 release 事件不會漏掉
@@ -314,11 +326,18 @@ class PetWindow(QWidget):
                 self.config["y"] = self.y()
                 save_config(self.config)
                 
+                # 立即切回待機
+                self.state_machine.set_state("Idle")
+                self.state_machine.current_index = 0
+                
                 # 隨機選擇新動畫
                 if hasattr(self, "idle_scheduler") and self.idle_scheduler:
                     self.idle_scheduler.pick_random()
                 else:
-                    self.state_machine.set_state("Idle")
+                    # fallback：手動載入當前待機動畫第一幀
+                    idle_frames = self.state_machine.frames.get("Idle", [])
+                    if idle_frames:
+                        self._set_pixmap(idle_frames[0])
                 
                 # 釋放滑鼠捕捉
                 try:

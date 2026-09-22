@@ -10,10 +10,10 @@ class BehaviorScheduler(QObject):
         super().__init__()
         self.pet = pet_window
         
-        # 動畫更新 timer，30 FPS
+        # 動畫更新 timer，約 22.5 FPS（原 30 FPS 的 0.75 倍）
         self.anim_timer = QTimer()
         self.anim_timer.timeout.connect(self._update_animation)
-        self.anim_timer.start(1000 // 30)
+        self.anim_timer.start(int(1000 / (30 * 0.75)))
     
     def _update_animation(self):
         """更新動畫"""
